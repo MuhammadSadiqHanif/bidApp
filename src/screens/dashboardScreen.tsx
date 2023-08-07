@@ -116,6 +116,7 @@ function DashboardScreen({navigation}: any): JSX.Element {
   }, []);
   const logout = async () => {
     try {
+      await AsyncStorage.removeItem('biddingHistory');
       await clearCredentials();
     } catch (e) {
       console.log(e);
