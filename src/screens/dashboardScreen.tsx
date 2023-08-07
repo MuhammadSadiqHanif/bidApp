@@ -5,10 +5,11 @@
  * @format
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   Alert,
+  Animated,
   FlatList,
   Image,
   SafeAreaView,
@@ -24,10 +25,6 @@ import {useAuth0} from 'react-native-auth0';
 import BidModal from '../components/bidModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// const auth0 = new Auth0({
-//   clientId: '2DCw2ISNStMZPLpNIhgt8N7f16kY8eJV',
-//   domain: 'dev-d7uehcl57ysmt1sv.us.auth0.com',
-// });
 let data = [
   {
     id: 1,
@@ -91,6 +88,15 @@ function DashboardScreen({navigation}: any): JSX.Element {
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [modalData, setModalData] = useState<any>({});
   const [biddingData, setBiddingData] = useState<any>([]);
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 3000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -126,7 +132,8 @@ function DashboardScreen({navigation}: any): JSX.Element {
             <Text style={styles.logoutbtn}>Logout</Text>
           </TouchableOpacity>
         </View>
-        <FlatList
+        <Animated.FlatList
+          style={{opacity: fadeAnim}}
           numColumns={2}
           data={data}
           renderItem={({item, index}: any) => {

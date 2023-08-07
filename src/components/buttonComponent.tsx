@@ -1,10 +1,17 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {PropsWithChildren} from 'react';
 type SectionProps = PropsWithChildren<{
   value?: any;
   onPress?: () => void;
   buttonStyle?: any;
   color?: any;
+  loading?: boolean;
   type?: string;
 }>;
 const ButtonComponent = ({
@@ -12,6 +19,7 @@ const ButtonComponent = ({
   onPress,
   buttonStyle,
   color,
+  loading,
   type,
 }: SectionProps) => {
   return (
@@ -24,13 +32,17 @@ const ButtonComponent = ({
           : {backgroundColor: '#fff'},
       ]}
       onPress={onPress}>
-      <Text
-        style={[
-          styles.text,
-          type === 'filled' ? {color: '#fff'} : {color: '#000'},
-        ]}>
-        {value}
-      </Text>
+      {loading ? (
+        <ActivityIndicator color={'#000'} size={24} />
+      ) : (
+        <Text
+          style={[
+            styles.text,
+            type === 'filled' ? {color: '#fff'} : {color: '#000'},
+          ]}>
+          {value}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

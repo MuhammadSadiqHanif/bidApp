@@ -27,17 +27,24 @@ import Auth0, {useAuth0} from 'react-native-auth0';
 // });
 function WelcomeScreen({navigation}: any): JSX.Element {
   const {authorize} = useAuth0();
-  let [accessToken, setAccessToken] = useState(null);
+  let [accessToken, setAccessToken] = useState<any>(null);
+  let [loader, setLoader] = useState<boolean>(false);
   const onPress = async () => {
     try {
+      setLoader(true);
       await authorize()
         .then((credentials: any) => {
           Alert.alert('AccessToken: ' + credentials.accessToken);
           setAccessToken(credentials.accessToken);
           navigation('dashboard');
+          setLoader(false);
         })
-        .catch((error: any) => console.log(error));
+        .catch((error: any) => {
+          setLoader(false);
+          console.log(error);
+        });
     } catch (e) {
+      setLoader(false);
       console.log(e);
     }
     // auth0.webAuth
@@ -66,6 +73,7 @@ function WelcomeScreen({navigation}: any): JSX.Element {
           </Text>
         </View>
         <ButtonComponent
+          loading={loader}
           value={'Login'}
           type={'outlined'}
           onPress={onPress}
